@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 # Centralizar o arquivo de controle de estado do terraform
-terrform{
+terraform{
     backend "s3"{
         bucket = "terraform-state-diego"
         key = "state/igti/edc/mod1/terraform.tfstate"
