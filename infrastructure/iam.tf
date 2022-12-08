@@ -2,7 +2,7 @@
 resource "aws_iam_role" "lambda" {
   name = "DiLambdaRole"
 
-  assume_role_poicy = <<EOF
+  assume_role_policy = <<EOF
 {
         "Version": "2012-10-17",
         "Statment": [
