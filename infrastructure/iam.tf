@@ -1,5 +1,5 @@
 # Criando uma role
-resource "aws_im_role" "lambda" {
+resource "aws_iam_role" "lambda" {
     name = "DiLambdaRole"
 
     assume_role_poicy = <<EOF
@@ -69,7 +69,7 @@ EOF
 }
 
 # Realizando vinculação das policies e das roles
-resource "aws_iam_role_policy_attatchment" "lambda_attach" {
+resource "aws_iam_role_policy_attachment" "lambda_attach" {
     role       = aws_iam_role.lambda.name
     policy_arn = aws_iam_policy.lambda.arn
 }
