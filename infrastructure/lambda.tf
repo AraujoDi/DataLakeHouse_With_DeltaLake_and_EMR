@@ -7,7 +7,7 @@ resource "aws_lambda_function" "executa_emr" {
     timeout       = 30
 
 
-source_code_hash = "${filebase64sha256("lambda_function_payload.zip")}"
+source_code_hash = filebase64sha256("lambda_function_payload.zip")
 
 runtime = "python3.8"
 
