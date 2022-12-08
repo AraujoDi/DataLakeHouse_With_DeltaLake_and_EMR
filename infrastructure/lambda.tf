@@ -10,5 +10,4 @@ resource "aws_lambda_function" "executa_emr" {
 source_code_hash = filebase64sha256("lambda_function_payload.zip")
 
 runtime = "python3.8"
-
 }
