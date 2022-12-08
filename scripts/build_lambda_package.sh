@@ -13,7 +13,7 @@ else
     echo "============================================="
     echo "Criando o diretório "$PACKAGE"..."
     mkdir $PACKAGE
-    echo "O diretório "SPACKAGE" foi criado."
+    echo "O diretório "$PACKAGE" foi criado."
     echo "============================================="
 fi
 
@@ -33,14 +33,14 @@ fi
 cd $PACKAGE
 
 # Declara variavel que localiza a função lambda para reutilização no código.
-LAMBDA_FUNCTIONS=../../etl/lambda_function.py
+LAMBDA_FUNCTION=../../etl/lambda_function.py
 
 # Verifica se o arquivo lambda_function.py existe
 if [-f $LAMBDA_FUNCTION]
 then
     echo "============================================="
     echo "Copiando função Handler"
-    cp "LAMBDA_FUNCTION" .
+    cp $LAMBDA_FUNCTION .
     echo "Compactando arquivo lambda_function_payload.zip"
     zip -r9 ../lambda_function_payload.zip . #Compacta o pacote para o deploy
     echo "Arquivo compactado com sucesso!"
