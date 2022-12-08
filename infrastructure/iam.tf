@@ -1,8 +1,8 @@
 # Criando uma role
 resource "aws_iam_role" "lambda" {
-    name = "DiLambdaRole"
+  name = "DiLambdaRole"
 
-    assume_role_poicy = <<EOF
+  assume_role_poicy = <<EOF
 {
         "Version": "2012-10-17",
         "Statment": [
@@ -18,19 +18,19 @@ resource "aws_iam_role" "lambda" {
 }
 EOF
 
-   tags = {
-    IES = "IGTI"
+  tags = {
+    IES   = "IGTI"
     CURSO = "EDC"
-   }
+  }
 }
 
 # Criando uma policy
 resource "aws_iam_policy" "lambda" {
-    name = "DiAWSLambdaBasicExecutionRolePolicy"
-    path = "/"
-    description = "Provides write permissions to ClodWatch Logs, S3 buckets and EMR Steps"
+  name        = "DiAWSLambdaBasicExecutionRolePolicy"
+  path        = "/"
+  description = "Provides write permissions to ClodWatch Logs, S3 buckets and EMR Steps"
 
-    policy = <<EOF
+  policy = <<EOF
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -70,6 +70,6 @@ EOF
 
 # Realizando vinculação das policies e das roles
 resource "aws_iam_role_policy_attachment" "lambda_attach" {
-    role       = aws_iam_role.lambda.name
-    policy_arn = aws_iam_policy.lambda.arn
+  role       = aws_iam_role.lambda.name
+  policy_arn = aws_iam_policy.lambda.arn
 }
