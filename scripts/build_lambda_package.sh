@@ -18,7 +18,7 @@ else
 fi
 
 # Declara variáveis que localiza o requirements com as depend^ncias do projeto
-FILE_REQUIREMENTS=../etl/lambda_requirements.txt
+FILE_REQUIREMENTS="../etl/lambda_requirements.txt"
 
 # Verifica se o arquivo lambda_requerements existe
 if [-f $FILE_REQUIREMENTS]
@@ -33,7 +33,7 @@ fi
 cd $PACKAGE
 
 # Declara variavel que localiza a função lambda para reutilização no código.
-LAMBDA_FUNCTION=../../etl/lambda_function.py
+LAMBDA_FUNCTION="../../etl/lambda_function.py"
 
 # Verifica se o arquivo lambda_function.py existe
 if [-f $LAMBDA_FUNCTION]
