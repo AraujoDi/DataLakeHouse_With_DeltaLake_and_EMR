@@ -6,8 +6,12 @@ resource "aws_lambda_function" "executa_emr" {
     memory_size   = 128
     timeout       = 30
 
+    source_code_hash = filebase64sha256(lambda_function_payload.zip)
 
-source_code_hash = filebase64sha256(lambda_function_payload.zip)
+    runtime = "python3.8"
 
-runtime = "python3.8"
+    tags = {
+      IES = "IGTI"
+      CURSO = "EDC"
+    }
 }
