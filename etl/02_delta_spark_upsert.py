@@ -2,32 +2,33 @@ import logging
 import sys
 
 from pyspark.sql import SparkSession
-from pyspark.sql.function import col, min, max, lit
+from pyspark.sql.functions import col, min, max, lit
 
-
-# Configuração de logs de aplicação
-logging.basicConfig('stream=sys.stdout')
+# Configuracao de logs de aplicacao
+logging.basicConfig(stream=sys.stdout)
 logger = logging.getLogger('datalake_enem_small_upsert')
 logger.setLevel(logging.DEBUG)
 
-# Definição da Spark Sesion
-spark = (SparkSession.builder.aapName("DeltaExercises")
+# Definicao da Spark Session
+spark = (SparkSession.builder.appName("DeltaExercise")
     .config("spark.jars.packages", "io.delta:delta-core_2.12:1.0.0")
     .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
     .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")
     .getOrCreate()
 )
 
+
 logger.info("Importing delta.tables...")
 from delta.tables import *
+
 
 logger.info("Produzindo novos dados...")
 enemnovo = (
     spark.read.format("delta")
-    .load("s3://dtlk-diego-edc-tf/staging-zone/enem")
+    .load("s3://datalake-ney-igti-edc-tf/staging-zone/enem")
 )
 
-# Define algumas inscrições (chaves) que serão alteradas
+# Define algumas inscricoes (chaves) que serao alteradas
 inscricoes = [190001595656,
             190001421546,
             190001133210,
@@ -79,25 +80,28 @@ inscricoes = [190001595656,
             190001705261,
             190001421556]
 
-logger.info("Reduz a 50 casos e faz updates internos no município de residência")
-enemnovo = enemnovo.where(enemnovo.NU_INSCRICAO.isin(inscricoes))
-enemnovo = enemnovo.withColumn("NO_MUNICIPIO_RESIDENCIA", lit("NOVA CIDADE")).withColumn("CO_MNICIPIO_RESIDENCIA", lit(10000000))
 
-logger.info("Pega os dados do ENenm velhos na tabela Delta...")
-enemvelho = DeltaTable.forPath(spark, "s3://dtlk-diego-edc-tf/staging-zone/enem")
+logger.info("Reduz a 50 casos e faz updates internos no municipio de residencia")
+enemnovo = enemnovo.where(enemnovo.NU_INSCRICAO.isin(inscricoes))
+enemnovo = enemnovo.withColumn("NO_MUNICIPIO_RESIDENCIA", lit("NOVA CIDADE")).withColumn("CO_MUNICIPIO_RESIDENCIA", lit(10000000))
+
+
+logger.info("Pega os dados do Enem velhos na tabela Delta...")
+enemvelho = DeltaTable.forPath(spark, "s3://datalake-ney-igti-edc-tf/staging-zone/enem")
+
 
 logger.info("Realiza o UPSERT...")
 (
     enemvelho.alias("old")
     .merge(enemnovo.alias("new"), "old.NU_INSCRICAO = new.NU_INSCRICAO")
     .whenMatchedUpdateAll()
-    .whenNoMatchedInsertAll()
+    .whenNotMatchedInsertAll()
     .execute()
 )
 
-logger.info("Atualização completa! \n\n")
+logger.info("Atualizacao completa! \n\n")
 
 logger.info("Gera manifesto symlink...")
 enemvelho.generate("symlink_format_manifest")
 
-logger.info("Manifesto gerado")
+logger.info("Manifesto gerado.")
