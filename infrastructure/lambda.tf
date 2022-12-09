@@ -14,4 +14,5 @@ resource "aws_lambda_function" "executa_emr" {
     IES   = "IGTI"
     CURSO = "EDC"
   }
+
 }
